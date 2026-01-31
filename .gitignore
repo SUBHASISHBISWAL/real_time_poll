@@ -57,8 +57,3 @@ Thumbs.db
 
 # Composer
 composer.phar
-
-
-
-# Unnecessary docs
-docs/
