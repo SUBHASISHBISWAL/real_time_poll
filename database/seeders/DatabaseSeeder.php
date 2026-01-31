@@ -18,20 +18,24 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // Create admin user
-        $admin = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@poll.com',
-            'password' => Hash::make('password'),
-            'is_admin' => true,
-        ]);
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@poll.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('password'),
+                'is_admin' => true,
+            ]
+        );
 
         // Create regular user
-        $user = User::create([
-            'name' => 'John Doe',
-            'email' => 'user@poll.com',
-            'password' => Hash::make('password'),
-            'is_admin' => false,
-        ]);
+        $user = User::updateOrCreate(
+            ['email' => 'user@poll.com'],
+            [
+                'name' => 'John Doe',
+                'password' => Hash::make('password'),
+                'is_admin' => false,
+            ]
+        );
 
         // Create sample polls
         $poll1 = Poll::create([
