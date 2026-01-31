@@ -29,6 +29,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/polls/{id}/vote', [PollController::class, 'vote']);
     Route::post('/polls', [PollController::class, 'store']);
     Route::get('/polls/{id}/results', [\App\Http\Controllers\ResultsController::class, 'show']);
+
+    // Admin routes
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/polls/{id}/votes', [\App\Http\Controllers\AdminController::class, 'viewVotes']);
+        Route::post('/polls/{pollId}/release/{ip}', [\App\Http\Controllers\AdminController::class, 'releaseIp']);
+        Route::get('/polls/{pollId}/audit/{ip}', [\App\Http\Controllers\AdminController::class, 'auditTrail']);
+    });
 });
 
 // Redirect root to polls or login
