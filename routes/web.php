@@ -10,6 +10,16 @@ use App\Http\Controllers\PollController;
 |--------------------------------------------------------------------------
 */
 
+Route::get('/debug-db', function() {
+    return response()->json([
+        'status' => 'online',
+        'connection' => config('database.default'),
+        'host' => config('database.connections.' . config('database.default') . '.host'),
+        'poll_count' => \App\Models\Poll::count(),
+        'active_poll_count' => \App\Models\Poll::where('status', 'active')->count()
+    ]);
+});
+
 // Guest routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -30,17 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/polls', [PollController::class, 'store']);
     Route::get('/polls/{id}/results', [\App\Http\Controllers\ResultsController::class, 'show']);
 
-    // Debug endpoint (delete after use)
-    Route::get('/api/debug/db', function() {
-        return response()->json([
-            'connection' => config('database.default'),
-            'database' => config('database.connections.' . config('database.default') . '.database'),
-            'host' => config('database.connections.' . config('database.default') . '.host'),
-            'poll_count' => \App\Models\Poll::count(),
-            'active_poll_count' => \App\Models\Poll::where('status', 'active')->count(),
-            'user' => Auth::user()->email
-        ]);
-    });
 
     // Admin routes
     Route::middleware('admin')->prefix('admin')->group(function () {
