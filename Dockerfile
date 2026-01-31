@@ -26,10 +26,14 @@ WORKDIR /var/www/html
 # Copy project files
 COPY . .
 
+# CRITICAL FIX: Ensure sensitive directories exist and are writable before Composer runs
+RUN mkdir -p bootstrap/cache storage/framework/views storage/framework/cache storage/framework/sessions storage/logs \
+    && chmod -R 777 bootstrap/cache storage
+
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions for Laravel
+# Set final ownership for runtime (Apache runs as www-data)
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Expose port (Render sets this dynamically, but 80 is container default)
