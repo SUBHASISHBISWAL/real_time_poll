@@ -32,7 +32,11 @@ $(document).ready(function () {
                         </div>
                     `);
 
-                    // Future: Trigger Module 3 results update here
+                    // Show results after voting
+                    if (typeof startPollingResults === 'function') {
+                        $('#pollOptions').addClass('d-none').after('<div id="pollResults"></div>');
+                        startPollingResults(pollId);
+                    }
                 }
             },
             error: function (xhr) {

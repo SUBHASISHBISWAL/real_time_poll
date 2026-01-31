@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/polls/{id}', [PollController::class, 'show']);
     Route::post('/polls/{id}/vote', [PollController::class, 'vote']);
     Route::post('/polls', [PollController::class, 'store']);
+    Route::get('/polls/{id}/results', [\App\Http\Controllers\ResultsController::class, 'show']);
 });
 
 // Redirect root to polls or login

@@ -31,6 +31,7 @@
             </div>
             <div class="card-body">
                 <div id="pollOptions"></div>
+                <div id="pollResults" class="d-none"></div>
             </div>
         </div>
     </div>
@@ -39,6 +40,7 @@
 
 @push('scripts')
 <script src="{{ asset('js/voting.js') }}"></script>
+<script src="{{ asset('js/results.js') }}"></script>
 <script>
 var currentPoll = null;
 
@@ -47,6 +49,9 @@ $(document).ready(function() {
     
     // Back to list button
     $('#backToList').click(function() {
+        if (typeof stopPollingResults === 'function') {
+            stopPollingResults();
+        }
         showPollsList();
     });
 });
@@ -107,7 +112,13 @@ function loadPollDetail(pollId) {
             });
             
             // Add vote button
-            $('#pollOptions').append('<button type="button" class="btn btn-primary mt-3" id="voteBtn">Submit Vote</button>');
+            $('#pollOptions').append('<div class="d-flex gap-2 mt-4"><button type="button" class="btn btn-primary" id="voteBtn">Submit Vote</button><button type="button" class="btn btn-outline-info" id="viewResultsBtn">View Live Results</button></div>');
+            
+            $('#viewResultsBtn').click(function() {
+                $('#pollOptions').addClass('d-none');
+                $('#pollResults').removeClass('d-none');
+                startPollingResults(pollId);
+            });
             
             // Show poll detail, hide list
             $('#pollsList').parent().parent().addClass('d-none');
@@ -120,6 +131,8 @@ function loadPollDetail(pollId) {
 
 function showPollsList() {
     $('#pollDetailContainer').addClass('d-none');
+    $('#pollResults').addClass('d-none').empty();
+    $('#pollOptions').removeClass('d-none').empty();
     $('#pollsList').parent().parent().removeClass('d-none');
     currentPoll = null;
 }
