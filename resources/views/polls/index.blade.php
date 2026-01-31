@@ -38,6 +38,7 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/voting.js') }}"></script>
 <script>
 var currentPoll = null;
 

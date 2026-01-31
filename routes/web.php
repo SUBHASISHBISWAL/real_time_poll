@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/polls', [PollController::class, 'index'])->name('polls.index');
     Route::get('/api/polls', [PollController::class, 'getPolls']);
     Route::get('/polls/{id}', [PollController::class, 'show']);
+    Route::post('/polls/{id}/vote', [PollController::class, 'vote']);
     Route::post('/polls', [PollController::class, 'store']);
 });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Poll;
+use App\Services\VotingService;
 use App\Models\PollOption;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,6 +47,34 @@ class PollController extends Controller
             'success' => true,
             'poll' => $poll
         ]);
+    }
+
+    // Handle vote submission
+    public function vote(Request $request, $id, \App\Services\VotingService $votingService)
+    {
+        $request->validate([
+            'option_id' => 'required|exists:poll_options,id',
+        ]);
+
+        try {
+            $ip = $request->ip();
+            $optionId = $request->input('option_id');
+
+            // Use our service to handle the logic
+            $vote = $votingService->recordVote($id, $optionId, $ip);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Vote recorded successfully!',
+                'vote_id' => $vote->id
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400); // 400 Bad Request
+        }
     }
 
     // Create new poll (admin only for now)
