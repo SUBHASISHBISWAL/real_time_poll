@@ -10,16 +10,6 @@ use App\Http\Controllers\PollController;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/debug-db', function() {
-    return response()->json([
-        'status' => 'online',
-        'connection' => config('database.default'),
-        'host' => config('database.connections.' . config('database.default') . '.host'),
-        'poll_count' => \App\Models\Poll::count(),
-        'active_poll_count' => \App\Models\Poll::where('status', 'active')->count()
-    ]);
-});
-
 // Guest routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -34,7 +24,7 @@ Route::middleware('auth')->group(function () {
     
     // Poll routes
     Route::get('/polls', [PollController::class, 'index'])->name('polls.index');
-    Route::get('/api/polls', [PollController::class, 'getPolls']);
+    Route::get('/ajax/polls', [PollController::class, 'getPolls']);
     Route::get('/polls/{id}', [PollController::class, 'show']);
     Route::post('/polls/{id}/vote', [PollController::class, 'vote']);
     Route::post('/polls', [PollController::class, 'store']);

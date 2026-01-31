@@ -60,7 +60,7 @@ function loadPolls() {
     $('#loadingMsg').show();
     $('#pollsList').empty();
     
-    $.get('/api/polls', function(response) {
+    $.get('/ajax/polls', function(response) {
         $('#loadingMsg').hide();
         
         if(response.success && response.polls.length > 0) {
